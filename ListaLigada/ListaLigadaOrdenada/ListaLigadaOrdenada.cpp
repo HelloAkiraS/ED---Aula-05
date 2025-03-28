@@ -114,10 +114,9 @@ void exibirElementos()
 
 void inserirElemento()
 {
-	// aloca memoria dinamicamente para o novo elemento
 	NO* novo = (NO*)malloc(sizeof(NO));
-	if (novo == NULL)
-	{
+	if (novo == NULL) {
+		cout << "Erro de alocação!\n";
 		return;
 	}
 
@@ -125,29 +124,101 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 
-	if (primeiro == NULL)
-	{
+	if (primeiro == NULL) {
+		primeiro = novo;
+		return;
+	}
+
+	NO* anterior = NULL;
+	NO* atual = primeiro;
+
+	while (atual != NULL && atual->valor < novo->valor) {
+		anterior = atual;
+		atual = atual->prox;
+	}
+
+	if (atual != NULL && atual->valor == novo->valor) {
+		cout << "Elemento duplicado! Não será inserido.\n";
+		free(novo);
+		return;
+	}
+
+	if (anterior == NULL) {
+		novo->prox = primeiro;
 		primeiro = novo;
 	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
+
+	else {
+		anterior->prox = novo;
+		novo->prox = atual;
 	}
+
+	cout << "Elemento inserido com sucesso!\n";
 }
 
 void excluirElemento()
 {
+	if (primeiro == NULL) {
+		cout << "Lista vazia!\n";
+		return;
+	}
 
+	int valorDigitado;
+	cout << "Digite o elemento: ";
+	cin >> valorDigitado;
+
+	NO* anterior = NULL;
+	NO* atual = primeiro;
+
+	while (atual != NULL && atual->valor < valorDigitado) {
+		anterior = atual;
+		atual = atual->prox;
+	}
+
+	if (atual == NULL || atual->valor != valorDigitado) {
+		cout << "Elemento não encontrado.\n";
+		return;
+	}
+
+	if (anterior == NULL) {
+		primeiro = atual->prox;
+	}
+	else {
+		anterior->prox = atual->prox;
+	}
+
+	free(atual);
+	cout << "Elemento removido!\n";
 }
 
 void buscarElemento()
 {
+	if (primeiro == NULL) {
+		cout << "Lista vazia!\n";
+		return;
+	}
 
+	int valorDigitado;
+	cout << "Digite o elemento: ";
+	cin >> valorDigitado;
+
+	NO* atual = primeiro;
+	bool encontrado = false;
+
+	while (atual != NULL && atual->valor <= valorDigitado) {
+		if (atual->valor == valorDigitado) {
+			encontrado = true;
+			break;
+		}
+		atual = atual->prox;
+	}
+
+	if (encontrado) {
+		cout << "Elemento encontrado!\n";
+	}
+	else {
+		cout << "Elemento não encontrado.\n";
+	}
 }
 
 
